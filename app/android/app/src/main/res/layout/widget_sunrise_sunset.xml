@@ -1,37 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/widget_bg_blur"
-    android:padding="10dp">
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="8dp">
 
     <TextView
-        android:id="@+id/text_sunrise"
+        android:id="@+id/text_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:text="--:--"
-        android:textColor="#CCFFFFFF"
-        android:textSize="11sp" />
-
-    <TextView
-        android:id="@+id/text_sunset"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:text="--:--"
-        android:textColor="#CCFFFFFF"
-        android:textSize="11sp" />
+        android:text="日出日落"
+        android:textColor="#718096"
+        android:textSize="10sp"
+        android:layout_marginBottom="2dp" />
 
     <ImageView
         android:id="@+id/image_sun_arc"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@id/text_sunrise"
-        android:layout_above="@id/text_sunset"
+        android:layout_weight="1"
         android:scaleType="fitCenter" />
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="2dp">
+
+        <TextView
+            android:id="@+id/text_sunrise_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="↑"
+            android:textColor="#F6AD55"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/text_sunrise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="--:--"
+            android:textColor="#1A1A2E"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginStart="2dp" />
+
+        <TextView
+            android:id="@+id/text_sunset_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="↓"
+            android:textColor="#F687B3"
+            android:textSize="14sp"
+            android:layout_marginStart="12dp" />
+
+        <TextView
+            android:id="@+id/text_sunset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="--:--"
+            android:textColor="#1A1A2E"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginStart="2dp" />
+    </LinearLayout>
+
+</LinearLayout>

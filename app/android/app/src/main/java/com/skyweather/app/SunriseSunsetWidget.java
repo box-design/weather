@@ -12,8 +12,6 @@ import android.widget.RemoteViews;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.List;
-
 public class SunriseSunsetWidget extends AppWidgetProvider {
     private static final String TAG = "SunriseSunsetWidget";
 
@@ -61,8 +59,8 @@ public class SunriseSunsetWidget extends AppWidgetProvider {
                     String sunrise = today.optString("sunrise", "");
                     String sunset = today.optString("sunset", "");
 
-                    views.setTextViewText(R.id.text_sunrise, "↑ " + formatTime(sunrise));
-                    views.setTextViewText(R.id.text_sunset, "↓ " + formatTime(sunset));
+                    views.setTextViewText(R.id.text_sunrise, formatTime(sunrise));
+                    views.setTextViewText(R.id.text_sunset, formatTime(sunset));
 
                     boolean isDay = true;
                     JSONObject currentObj = obj.optJSONObject("current");
@@ -89,7 +87,7 @@ public class SunriseSunsetWidget extends AppWidgetProvider {
                     return timePart.substring(0, 5);
                 }
             }
-            return isoTime;
+            return "--:--";
         } catch (Exception e) {
             return "--:--";
         }

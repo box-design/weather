@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/widget_bg_blur"
-    android:padding="12dp">
+    android:padding="10dp">
 
     <LinearLayout
         android:id="@+id/left_panel"
@@ -19,30 +19,34 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="--°"
-            android:textColor="#FFFFFF"
-            android:textSize="36sp"
+            android:textColor="#1A1A2E"
+            android:textSize="34sp"
             android:textStyle="bold"
-            android:shadowColor="#80000000"
+            android:shadowColor="#66FFFFFF"
             android:shadowDx="0"
             android:shadowDy="1"
-            android:shadowRadius="3" />
+            android:shadowRadius="2" />
 
         <TextView
             android:id="@+id/text_weather_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="--"
-            android:textColor="#CCFFFFFF"
-            android:textSize="13sp"
-            android:layout_marginTop="2dp" />
+            android:textColor="#2D3748"
+            android:textSize="12sp"
+            android:layout_marginTop="2dp"
+            android:shadowColor="#66FFFFFF"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="1" />
 
         <TextView
             android:id="@+id/text_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="--"
-            android:textColor="#99FFFFFF"
-            android:textSize="11sp"
+            android:textColor="#718096"
+            android:textSize="10sp"
             android:layout_marginTop="1dp" />
     </LinearLayout>
 
@@ -54,7 +58,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@id/left_panel"
         android:layout_alignBottom="@id/left_panel"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="6dp"
         android:scaleType="fitCenter" />
 
 </RelativeLayout>

@@ -55,8 +55,9 @@ public class AirQualityWidget extends AppWidgetProvider {
                 JSONObject aqObj = obj.optJSONObject("airQuality");
                 if (aqObj != null) {
                     double euAqi = aqObj.optDouble("euAqi", 0);
+                    double pm25 = aqObj.optDouble("pm2_5", 0);
                     views.setImageViewBitmap(R.id.image_aqi_ring,
-                        ChartRenderer.drawAqiRing(euAqi, 300, 300));
+                        ChartRenderer.drawAqiRing(euAqi, pm25, 300, 300));
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Error updating widget", e);
