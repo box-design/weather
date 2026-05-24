@@ -4,4 +4,7 @@
     <string name="title_activity_main">SkyWeather</string>
     <string name="package_name">com.skyweather.app</string>
     <string name="custom_url_scheme">com.skyweather.app</string>
+    <string name="widget_weather_overview_desc">显示当前天气和未来5小时温度趋势</string>
+    <string name="widget_sunrise_sunset_desc">显示日出日落时间</string>
+    <string name="widget_air_quality_desc">显示空气质量指数</string>
 </resources>
