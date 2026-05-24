@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SkyWeather</string>
+    <string name="title_activity_main">SkyWeather</string>
+    <string name="package_name">com.skyweather.app</string>
+    <string name="custom_url_scheme">com.skyweather.app</string>
+</resources>
