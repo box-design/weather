@@ -59,8 +59,11 @@ public class SunriseSunsetWidget extends AppWidgetProvider {
                     String sunrise = today.optString("sunrise", "");
                     String sunset = today.optString("sunset", "");
 
-                    views.setTextViewText(R.id.text_sunrise, formatTime(sunrise));
-                    views.setTextViewText(R.id.text_sunset, formatTime(sunset));
+                    String sunriseFormatted = formatTime(sunrise);
+                    String sunsetFormatted = formatTime(sunset);
+
+                    views.setTextViewText(R.id.text_sunrise, "↑ " + sunriseFormatted);
+                    views.setTextViewText(R.id.text_sunset, "↓ " + sunsetFormatted);
 
                     boolean isDay = true;
                     JSONObject currentObj = obj.optJSONObject("current");
@@ -87,7 +90,7 @@ public class SunriseSunsetWidget extends AppWidgetProvider {
                     return timePart.substring(0, 5);
                 }
             }
-            return "--:--";
+            return isoTime;
         } catch (Exception e) {
             return "--:--";
         }

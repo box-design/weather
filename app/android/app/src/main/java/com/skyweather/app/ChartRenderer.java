@@ -26,9 +26,9 @@ public class ChartRenderer {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
 
-        float chartLeft = 36f;
+        float chartLeft = 0;
         float chartTop = 28f;
-        float chartRight = width - 30f;
+        float chartRight = width - 8f;
         float chartBottom = height - 24f;
         float chartWidth = chartRight - chartLeft;
         float chartHeight = chartBottom - chartTop;
@@ -45,17 +45,14 @@ public class ChartRenderer {
             maxTemp += 0.5;
             tempRange = maxTemp - minTemp;
         }
-        minTemp -= tempRange * 0.1;
-        maxTemp += tempRange * 0.1;
-        tempRange = maxTemp - minTemp;
 
         int lineColor = getChartColor(weatherCode);
-        int lineColorAlpha = Color.argb(140, Color.red(lineColor), Color.green(lineColor), Color.blue(lineColor));
+        int lineColorAlpha = Color.argb(180, Color.red(lineColor), Color.green(lineColor), Color.blue(lineColor));
 
         Paint linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         linePaint.setColor(lineColor);
         linePaint.setStyle(Paint.Style.STROKE);
-        linePaint.setStrokeWidth(2.5f);
+        linePaint.setStrokeWidth(3f);
         linePaint.setStrokeCap(Paint.Cap.ROUND);
         linePaint.setStrokeJoin(Paint.Join.ROUND);
 
@@ -63,19 +60,18 @@ public class ChartRenderer {
         fillPaint.setStyle(Paint.Style.FILL);
 
         Paint dotPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        dotPaint.setColor(Color.WHITE);
+        dotPaint.setColor(lineColor);
         dotPaint.setStyle(Paint.Style.FILL);
 
         Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setColor(Color.argb(160, 255, 255, 255));
-        textPaint.setTextSize(11f);
+        textPaint.setColor(Color.argb(180, 255, 255, 255));
+        textPaint.setTextSize(18f);
         textPaint.setTextAlign(Paint.Align.CENTER);
 
         Paint tempTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         tempTextPaint.setColor(Color.WHITE);
-        tempTextPaint.setTextSize(12f);
+        tempTextPaint.setTextSize(20f);
         tempTextPaint.setTextAlign(Paint.Align.CENTER);
-        tempTextPaint.setShadowLayer(2, 0, 1, 0x66000000);
 
         int n = temperatures.size();
         float[] pointsX = new float[n];
@@ -109,27 +105,21 @@ public class ChartRenderer {
         fillPaint.setShader(gradient);
         canvas.drawPath(fillPath, fillPaint);
 
-        int prevLabelDir = 0;
         for (int i = 0; i < n; i++) {
-            canvas.drawCircle(pointsX[i], pointsY[i], 3f, dotPaint);
-
-            String tempStr = (int) Math.round(temperatures.get(i)) + "\u00b0";
-
-            int labelDir = 0;
-            if (i > 0 && Math.abs(temperatures.get(i) - temperatures.get(i - 1)) < 0.3) {
-                labelDir = -prevLabelDir;
-                if (labelDir == 0) labelDir = (i % 2 == 0) ? 1 : -1;
+            canvas.drawCircle(pointsX[i], pointsY[i], 4f, dotPaint);
+            String tempStr = Math.round(temperatures.get(i)) + "°";
+            tempTextPaint.setColor(Color.WHITE);
+            float tempTextY = pointsY[i] - 14f;
+            if (tempTextY < 18f) {
+                tempTextY = pointsY[i] + 24f;
             }
-            prevLabelDir = labelDir;
-
-            float labelY = pointsY[i] - 10f + labelDir * 18f;
-            canvas.drawText(tempStr, pointsX[i], labelY, tempTextPaint);
+            canvas.drawText(tempStr, pointsX[i], tempTextY, tempTextPaint);
         }
 
         if (times != null) {
             for (int i = 0; i < n; i++) {
                 String timeLabel = formatTimeLabel(times.get(i));
-                canvas.drawText(timeLabel, pointsX[i], chartBottom + 14f, textPaint);
+                canvas.drawText(timeLabel, pointsX[i], chartBottom + 20f, textPaint);
             }
         }
 
@@ -149,10 +139,10 @@ public class ChartRenderer {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
 
-        float chartLeft = 36f;
-        float chartTop = 28f;
-        float chartRight = width - 30f;
-        float chartBottom = height - 24f;
+        float chartLeft = 0;
+        float chartTop = 16f;
+        float chartRight = width - 8f;
+        float chartBottom = height - 28f;
         float chartWidth = chartRight - chartLeft;
         float chartHeight = chartBottom - chartTop;
 
@@ -163,17 +153,27 @@ public class ChartRenderer {
         if (maxPrecip < 0.1) maxPrecip = 0.1;
 
         int n = precipitations.size();
-        float barWidth = chartWidth / n * 0.5f;
+        float barWidth = chartWidth / n * 0.6f;
         float barSpacing = chartWidth / n;
 
         Paint barPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        barPaint.setColor(Color.argb(140, 100, 180, 255));
+        barPaint.setColor(Color.argb(180, 100, 180, 255));
         barPaint.setStyle(Paint.Style.FILL);
 
+        Paint barStrokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        barStrokePaint.setColor(Color.argb(220, 130, 200, 255));
+        barStrokePaint.setStyle(Paint.Style.STROKE);
+        barStrokePaint.setStrokeWidth(1.5f);
+
         Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setColor(Color.argb(160, 255, 255, 255));
-        textPaint.setTextSize(11f);
+        textPaint.setColor(Color.argb(180, 255, 255, 255));
+        textPaint.setTextSize(18f);
         textPaint.setTextAlign(Paint.Align.CENTER);
+
+        Paint valuePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        valuePaint.setColor(Color.WHITE);
+        valuePaint.setTextSize(20f);
+        valuePaint.setTextAlign(Paint.Align.CENTER);
 
         for (int i = 0; i < n; i++) {
             float barHeight = (float) (chartHeight * (precipitations.get(i) / maxPrecip));
@@ -182,21 +182,17 @@ public class ChartRenderer {
             float right = left + barWidth;
 
             RectF barRect = new RectF(left, top, right, chartBottom);
-            canvas.drawRoundRect(barRect, 3f, 3f, barPaint);
+            canvas.drawRoundRect(barRect, 4f, 4f, barPaint);
+            canvas.drawRoundRect(barRect, 4f, 4f, barStrokePaint);
 
-            if (precipitations.get(i) > 0.01) {
+            if (precipitations.get(i) > 0) {
                 String valStr = String.format("%.1f", precipitations.get(i));
-                Paint valPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                valPaint.setColor(Color.WHITE);
-                valPaint.setTextSize(12f);
-                valPaint.setTextAlign(Paint.Align.CENTER);
-                valPaint.setShadowLayer(2, 0, 1, 0x66000000);
-                canvas.drawText(valStr, left + barWidth / 2f, top - 4f, valPaint);
+                canvas.drawText(valStr, left + barWidth / 2f, top - 6f, valuePaint);
             }
 
             if (times != null && i < times.size()) {
                 String timeLabel = formatTimeLabel(times.get(i));
-                canvas.drawText(timeLabel, left + barWidth / 2f, chartBottom + 14f, textPaint);
+                canvas.drawText(timeLabel, left + barWidth / 2f, chartBottom + 20f, textPaint);
             }
         }
 
@@ -206,10 +202,10 @@ public class ChartRenderer {
                 if (p > maxProb) maxProb = p;
             }
             Paint probPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            probPaint.setColor(Color.argb(180, 130, 200, 255));
-            probPaint.setTextSize(12f);
+            probPaint.setColor(Color.argb(200, 130, 200, 255));
+            probPaint.setTextSize(18f);
             probPaint.setTextAlign(Paint.Align.LEFT);
-            canvas.drawText("\u964d\u6c34\u6982\u7387 " + Math.round(maxProb) + "%", chartLeft, chartTop + 14f, probPaint);
+            canvas.drawText("降水概率 " + Math.round(maxProb) + "%", chartLeft + 4f, chartTop + 2f, probPaint);
         }
 
         return bitmap;
@@ -235,18 +231,18 @@ public class ChartRenderer {
             long dayLength = sunsetMillis - sunriseMillis;
 
             float cx = width / 2f;
-            float cy = height * 0.72f;
-            float radius = Math.min(width, height) * 0.35f;
+            float cy = height * 0.85f;
+            float radius = Math.min(width, height) * 0.38f;
 
             Paint arcPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             arcPaint.setStyle(Paint.Style.STROKE);
+            arcPaint.setStrokeWidth(2.5f);
             arcPaint.setStrokeCap(Paint.Cap.ROUND);
 
-            int arcColor = isDay ? Color.argb(60, 255, 200, 50) : Color.argb(60, 100, 140, 200);
-            int progressColor = isDay ? Color.argb(180, 255, 200, 50) : Color.argb(180, 100, 140, 200);
+            int arcColor = isDay ? Color.argb(120, 255, 200, 50) : Color.argb(120, 100, 140, 200);
+            int progressColor = isDay ? Color.argb(220, 255, 200, 50) : Color.argb(220, 100, 140, 200);
 
             arcPaint.setColor(arcColor);
-            arcPaint.setStrokeWidth(2.5f);
             RectF arcRect = new RectF(cx - radius, cy - radius, cx + radius, cy + radius);
             canvas.drawArc(arcRect, 180, 180, false, arcPaint);
 
@@ -264,38 +260,29 @@ public class ChartRenderer {
                 Paint markerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
                 markerPaint.setStyle(Paint.Style.FILL);
                 if (isDay) {
-                    Paint glowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                    glowPaint.setColor(Color.argb(40, 255, 210, 60));
-                    canvas.drawCircle(markerX, markerY, 16f, glowPaint);
                     markerPaint.setColor(Color.argb(255, 255, 210, 60));
                     canvas.drawCircle(markerX, markerY, 8f, markerPaint);
+                    Paint glowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                    glowPaint.setColor(Color.argb(60, 255, 210, 60));
+                    canvas.drawCircle(markerX, markerY, 14f, glowPaint);
                 } else {
-                    markerPaint.setColor(Color.argb(200, 200, 210, 255));
+                    markerPaint.setColor(Color.argb(220, 180, 200, 255));
                     canvas.drawCircle(markerX, markerY, 7f, markerPaint);
                     Paint moonShadow = new Paint(Paint.ANTI_ALIAS_FLAG);
-                    moonShadow.setColor(Color.argb(140, 30, 40, 80));
+                    moonShadow.setColor(Color.argb(180, 30, 40, 80));
                     moonShadow.setStyle(Paint.Style.FILL);
                     canvas.drawCircle(markerX + 3f, markerY - 2f, 5f, moonShadow);
                 }
             } else if (now > sunsetMillis) {
-                arcPaint.setColor(Color.argb(30, 100, 140, 200));
+                arcPaint.setColor(Color.argb(60, 100, 140, 200));
                 arcPaint.setStrokeWidth(2f);
                 canvas.drawArc(arcRect, 180, 180, false, arcPaint);
             }
 
             Paint horizonPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            horizonPaint.setColor(Color.argb(30, 255, 255, 255));
+            horizonPaint.setColor(Color.argb(60, 255, 255, 255));
             horizonPaint.setStrokeWidth(1f);
-            canvas.drawLine(cx - radius - 12f, cy, cx + radius + 12f, cy, horizonPaint);
-
-            Paint timeLabelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            timeLabelPaint.setColor(Color.argb(160, 255, 255, 255));
-            timeLabelPaint.setTextSize(13f);
-            timeLabelPaint.setTextAlign(Paint.Align.LEFT);
-            canvas.drawText("\u2191 " + formatTime(sunrise), cx - radius - 4f, cy + 14f, timeLabelPaint);
-
-            timeLabelPaint.setTextAlign(Paint.Align.RIGHT);
-            canvas.drawText("\u2193 " + formatTime(sunset), cx + radius + 4f, cy + 14f, timeLabelPaint);
+            canvas.drawLine(cx - radius - 10f, cy, cx + radius + 10f, cy, horizonPaint);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -306,7 +293,6 @@ public class ChartRenderer {
 
     public static Bitmap drawAqiRing(
             double aqiValue,
-            double pm2_5,
             int width,
             int height) {
         if (width <= 0 || height <= 0) {
@@ -317,15 +303,15 @@ public class ChartRenderer {
         Canvas canvas = new Canvas(bitmap);
 
         float cx = width / 2f;
-        float cy = height * 0.36f;
-        float radius = Math.min(width, height) * 0.30f;
-        float strokeWidth = 10f;
+        float cy = height / 2f;
+        float radius = Math.min(width, height) * 0.32f;
+        float strokeWidth = 8f;
 
         int aqiColor = getAqiColor(aqiValue);
         String aqiLabel = getAqiLabel(aqiValue);
 
         Paint bgRingPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        bgRingPaint.setColor(Color.argb(25, 255, 255, 255));
+        bgRingPaint.setColor(Color.argb(40, 255, 255, 255));
         bgRingPaint.setStyle(Paint.Style.STROKE);
         bgRingPaint.setStrokeWidth(strokeWidth);
         bgRingPaint.setStrokeCap(Paint.Cap.ROUND);
@@ -334,7 +320,6 @@ public class ChartRenderer {
 
         float progress = (float) Math.min(aqiValue / 150.0, 1.0);
         float sweepAngle = progress * 270;
-
         Paint progressPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         progressPaint.setColor(aqiColor);
         progressPaint.setStyle(Paint.Style.STROKE);
@@ -344,23 +329,16 @@ public class ChartRenderer {
 
         Paint valuePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         valuePaint.setColor(Color.WHITE);
-        valuePaint.setTextSize(38f);
+        valuePaint.setTextSize(40f);
         valuePaint.setTextAlign(Paint.Align.CENTER);
-        valuePaint.setShadowLayer(3, 0, 1, 0x44000000);
         String aqiStr = String.valueOf((int) Math.round(aqiValue));
-        canvas.drawText(aqiStr, cx, cy + 6f, valuePaint);
+        canvas.drawText(aqiStr, cx, cy + 8f, valuePaint);
 
         Paint labelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         labelPaint.setColor(aqiColor);
-        labelPaint.setTextSize(18f);
+        labelPaint.setTextSize(20f);
         labelPaint.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText(aqiLabel, cx, cy + 26f, labelPaint);
-
-        Paint pmPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        pmPaint.setColor(Color.argb(140, 255, 255, 255));
-        pmPaint.setTextSize(13f);
-        pmPaint.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText("PM2.5: " + String.valueOf((int) Math.round(pm2_5)), cx, height * 0.75f, pmPaint);
+        canvas.drawText(aqiLabel, cx, cy + 30f, labelPaint);
 
         return bitmap;
     }
@@ -387,12 +365,12 @@ public class ChartRenderer {
     }
 
     private static String getAqiLabel(double aqi) {
-        if (aqi <= 20) return "\u4f18";
-        if (aqi <= 40) return "\u826f";
-        if (aqi <= 60) return "\u4e2d";
-        if (aqi <= 80) return "\u5dee";
-        if (aqi <= 100) return "\u5f88\u5dee";
-        return "\u5371\u9669";
+        if (aqi <= 20) return "优";
+        if (aqi <= 40) return "良";
+        if (aqi <= 60) return "中";
+        if (aqi <= 80) return "差";
+        if (aqi <= 100) return "很差";
+        return "危险";
     }
 
     private static String formatTimeLabel(String isoTime) {
@@ -400,30 +378,12 @@ public class ChartRenderer {
             if (isoTime.contains("T")) {
                 String timePart = isoTime.split("T")[1];
                 if (timePart.length() >= 5) {
-                    String hh = timePart.substring(0, 2);
-                    String mm = timePart.substring(3, 5);
-                    int hour = Integer.parseInt(hh);
-                    if (hour == 0) return "0:00";
-                    return hour + ":" + mm;
-                }
-            }
-            return isoTime;
-        } catch (Exception e) {
-            return isoTime;
-        }
-    }
-
-    private static String formatTime(String isoTime) {
-        try {
-            if (isoTime.contains("T")) {
-                String timePart = isoTime.split("T")[1];
-                if (timePart.length() >= 5) {
                     return timePart.substring(0, 5);
                 }
             }
-            return "--:--";
+            return isoTime;
         } catch (Exception e) {
-            return "--:--";
+            return isoTime;
         }
     }
 

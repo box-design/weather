@@ -56,8 +56,13 @@ public class AirQualityWidget extends AppWidgetProvider {
                 if (aqObj != null) {
                     double euAqi = aqObj.optDouble("euAqi", 0);
                     double pm25 = aqObj.optDouble("pm2_5", 0);
+                    double pm10 = aqObj.optDouble("pm10", 0);
+
                     views.setImageViewBitmap(R.id.image_aqi_ring,
-                        ChartRenderer.drawAqiRing(euAqi, pm25, 300, 300));
+                        ChartRenderer.drawAqiRing(euAqi, 300, 300));
+
+                    String details = "PM2.5: " + String.format("%.0f", pm25) + "  PM10: " + String.format("%.0f", pm10);
+                    views.setTextViewText(R.id.text_aqi_details, details);
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Error updating widget", e);

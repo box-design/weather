@@ -1,71 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/widget_bg_blur"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:padding="8dp">
+    android:padding="12dp">
 
     <TextView
-        android:id="@+id/text_title"
+        android:id="@+id/text_day_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:text="日出日落"
-        android:textColor="#718096"
-        android:textSize="10sp"
-        android:layout_marginBottom="2dp" />
+        android:textColor="#E6FFFFFF"
+        android:textSize="12sp" />
 
     <ImageView
         android:id="@+id/image_sun_arc"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_below="@id/text_day_title"
+        android:layout_above="@id/info_panel"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
         android:scaleType="fitCenter" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/info_panel"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:layout_marginTop="2dp">
-
-        <TextView
-            android:id="@+id/text_sunrise_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="↑"
-            android:textColor="#F6AD55"
-            android:textSize="14sp" />
+        android:gravity="center">
 
         <TextView
             android:id="@+id/text_sunrise"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="--:--"
-            android:textColor="#1A1A2E"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:layout_marginStart="2dp" />
+            android:text="↑ --:--"
+            android:textColor="#CCFFFFFF"
+            android:textSize="11sp" />
 
-        <TextView
-            android:id="@+id/text_sunset_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="↓"
-            android:textColor="#F687B3"
-            android:textSize="14sp"
-            android:layout_marginStart="12dp" />
+        <View
+            android:layout_width="12dp"
+            android:layout_height="0dp" />
 
         <TextView
             android:id="@+id/text_sunset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="--:--"
-            android:textColor="#1A1A2E"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:layout_marginStart="2dp" />
+            android:text="↓ --:--"
+            android:textColor="#CCFFFFFF"
+            android:textSize="11sp" />
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

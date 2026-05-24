@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/widget_bg_blur"
-    android:padding="10dp">
+    android:padding="14dp">
 
     <LinearLayout
         android:id="@+id/left_panel"
@@ -19,46 +19,41 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="--°"
-            android:textColor="#1A1A2E"
-            android:textSize="34sp"
+            android:textColor="#FFFFFF"
+            android:textSize="38sp"
             android:textStyle="bold"
-            android:shadowColor="#66FFFFFF"
+            android:shadowColor="#40000000"
             android:shadowDx="0"
-            android:shadowDy="1"
-            android:shadowRadius="2" />
+            android:shadowDy="2"
+            android:shadowRadius="4" />
 
         <TextView
             android:id="@+id/text_weather_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="--"
-            android:textColor="#2D3748"
-            android:textSize="12sp"
-            android:layout_marginTop="2dp"
-            android:shadowColor="#66FFFFFF"
-            android:shadowDx="0"
-            android:shadowDy="1"
-            android:shadowRadius="1" />
+            android:textColor="#E6FFFFFF"
+            android:textSize="13sp"
+            android:layout_marginTop="2dp" />
 
         <TextView
             android:id="@+id/text_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="--"
-            android:textColor="#718096"
-            android:textSize="10sp"
+            android:textColor="#B3FFFFFF"
+            android:textSize="11sp"
             android:layout_marginTop="1dp" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/image_chart"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_toEndOf="@id/left_panel"
         android:layout_alignParentEnd="true"
-        android:layout_alignTop="@id/left_panel"
-        android:layout_alignBottom="@id/left_panel"
-        android:layout_marginStart="6dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"
         android:scaleType="fitCenter" />
 
 </RelativeLayout>
