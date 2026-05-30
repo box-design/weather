@@ -65,7 +65,7 @@ jobs:
         if: github.ref_type == 'tag'
         uses: softprops/action-gh-release@v2
         with:
-          files: release/SkyWeather-v0.2.1.apk
+          files: release/SkyWeather-v0.2.2.apk
           body_path: release-notes.md
           generate_release_notes: false
         env:
