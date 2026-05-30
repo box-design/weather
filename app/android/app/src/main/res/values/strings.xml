@@ -7,4 +7,5 @@
     <string name="widget_weather_overview_desc">显示当前天气和未来5小时温度趋势</string>
     <string name="widget_sunrise_sunset_desc">显示日出日落时间</string>
     <string name="widget_air_quality_desc">显示空气质量指数</string>
+    <string name="widget_weather_overview_small_desc">显示当前天气和未来3小时温度趋势（紧凑型）</string>
 </resources>

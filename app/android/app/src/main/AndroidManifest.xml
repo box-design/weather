@@ -48,6 +48,17 @@
         </receiver>
 
         <receiver
+            android:name=".WeatherOverviewWidgetSmall"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/weather_overview_widget_info_small" />
+        </receiver>
+
+        <receiver
             android:name=".SunriseSunsetWidget"
             android:exported="true">
             <intent-filter>

@@ -42,6 +42,7 @@ public class WidgetUpdateWorker extends Worker {
             WidgetPrefs.cacheWidgetData(context, cachedJson);
 
             WeatherOverviewWidget.updateAll(context);
+            WeatherOverviewWidgetSmall.updateAll(context);
             SunriseSunsetWidget.updateAll(context);
             AirQualityWidget.updateAll(context);
 

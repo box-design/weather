@@ -17,6 +17,8 @@ public class WidgetPrefs {
     private static final String KEY_PREFIX_TZ = "widget_tz_";
     private static final String KEY_CACHED_DATA = "cached_widget_data";
     private static final String KEY_SAVED_CITIES = "skyweather_saved_cities";
+    private static final String KEY_PREFIX_PAGE = "widget_page_";
+    private static final String KEY_PREFIX_PAGE_SMALL = "widget_page_small_";
 
     private static SharedPreferences getPrefs(Context context) {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -53,7 +55,25 @@ public class WidgetPrefs {
         editor.remove(KEY_PREFIX_LAT + appWidgetId);
         editor.remove(KEY_PREFIX_LON + appWidgetId);
         editor.remove(KEY_PREFIX_TZ + appWidgetId);
+        editor.remove(KEY_PREFIX_PAGE + appWidgetId);
+        editor.remove(KEY_PREFIX_PAGE_SMALL + appWidgetId);
         editor.apply();
+    }
+
+    public static void setWidgetPage(Context context, int appWidgetId, int page) {
+        getPrefs(context).edit().putInt(KEY_PREFIX_PAGE + appWidgetId, page).apply();
+    }
+
+    public static int getWidgetPage(Context context, int appWidgetId, int defaultPage) {
+        return getPrefs(context).getInt(KEY_PREFIX_PAGE + appWidgetId, defaultPage);
+    }
+
+    public static void setWidgetPageSmall(Context context, int appWidgetId, int page) {
+        getPrefs(context).edit().putInt(KEY_PREFIX_PAGE_SMALL + appWidgetId, page).apply();
+    }
+
+    public static int getWidgetPageSmall(Context context, int appWidgetId, int defaultPage) {
+        return getPrefs(context).getInt(KEY_PREFIX_PAGE_SMALL + appWidgetId, defaultPage);
     }
 
     public static void cacheWidgetData(Context context, String jsonData) {

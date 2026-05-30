@@ -3,8 +3,8 @@
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/widget_bg_card"
-    android:padding="12dp">
+    android:background="@drawable/widget_bg_card_small"
+    android:padding="10dp">
 
     <ViewFlipper
         android:id="@+id/view_flipper"
@@ -13,7 +13,7 @@
         android:inAnimation="@anim/widget_card_fade_in"
         android:outAnimation="@anim/widget_card_fade_out">
 
-        <!-- 卡片1：温度预报 -->
+        <!-- 卡片1：温度预报（3小时） -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -29,7 +29,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="32"
+                    android:layout_weight="35"
                     android:gravity="center_vertical"
                     android:orientation="vertical">
 
@@ -39,7 +39,7 @@
                         android:layout_height="wrap_content"
                         android:text="--"
                         android:textColor="@color/widget_text_secondary"
-                        android:textSize="12sp"
+                        android:textSize="10sp"
                         android:maxLines="1"
                         android:ellipsize="end" />
 
@@ -47,20 +47,20 @@
                         android:id="@+id/text_temperature"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="1dp"
                         android:text="--°"
                         android:textColor="@color/widget_text_primary"
-                        android:textSize="36sp"
+                        android:textSize="28sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/text_weather_desc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="1dp"
                         android:text="--"
                         android:textColor="@color/widget_text_secondary"
-                        android:textSize="13sp"
+                        android:textSize="11sp"
                         android:maxLines="1"
                         android:ellipsize="end" />
                 </LinearLayout>
@@ -70,8 +70,8 @@
                     android:id="@+id/image_chart_temp"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="68"
-                    android:layout_marginStart="8dp"
+                    android:layout_weight="65"
+                    android:layout_marginStart="6dp"
                     android:scaleType="fitCenter" />
             </LinearLayout>
 
@@ -79,24 +79,24 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="6dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="6dp"
-                    android:layout_height="6dp"
+                    android:layout_width="5dp"
+                    android:layout_height="5dp"
                     android:src="@drawable/ic_widget_dot_active" />
 
                 <ImageView
-                    android:layout_width="6dp"
-                    android:layout_height="6dp"
-                    android:layout_marginStart="6dp"
+                    android:layout_width="5dp"
+                    android:layout_height="5dp"
+                    android:layout_marginStart="5dp"
                     android:src="@drawable/ic_widget_dot_inactive" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- 卡片2：降水预报 -->
+        <!-- 卡片2：降水预报（1小时） -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -108,11 +108,11 @@
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <!-- 左侧温度信息（上下文） -->
+                <!-- 左侧温度信息 -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="32"
+                    android:layout_weight="35"
                     android:gravity="center_vertical"
                     android:orientation="vertical">
 
@@ -122,7 +122,7 @@
                         android:layout_height="wrap_content"
                         android:text="--"
                         android:textColor="@color/widget_text_secondary"
-                        android:textSize="12sp"
+                        android:textSize="10sp"
                         android:maxLines="1"
                         android:ellipsize="end" />
 
@@ -130,20 +130,20 @@
                         android:id="@+id/text_temperature_precip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="1dp"
                         android:text="--°"
                         android:textColor="@color/widget_text_primary"
-                        android:textSize="36sp"
+                        android:textSize="28sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/text_weather_desc_precip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="1dp"
                         android:text="--"
                         android:textColor="@color/widget_text_secondary"
-                        android:textSize="13sp"
+                        android:textSize="11sp"
                         android:maxLines="1"
                         android:ellipsize="end" />
                 </LinearLayout>
@@ -153,8 +153,8 @@
                     android:id="@+id/image_chart_precip"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="68"
-                    android:layout_marginStart="8dp"
+                    android:layout_weight="65"
+                    android:layout_marginStart="6dp"
                     android:scaleType="fitCenter" />
             </LinearLayout>
 
@@ -162,19 +162,19 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="6dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="6dp"
-                    android:layout_height="6dp"
+                    android:layout_width="5dp"
+                    android:layout_height="5dp"
                     android:src="@drawable/ic_widget_dot_inactive" />
 
                 <ImageView
-                    android:layout_width="6dp"
-                    android:layout_height="6dp"
-                    android:layout_marginStart="6dp"
+                    android:layout_width="5dp"
+                    android:layout_height="5dp"
+                    android:layout_marginStart="5dp"
                     android:src="@drawable/ic_widget_dot_active" />
             </LinearLayout>
         </LinearLayout>

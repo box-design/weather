@@ -17,29 +17,26 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class WeatherOverviewWidget extends AppWidgetProvider {
-    private static final String TAG = "WeatherOverviewWidget";
+public class WeatherOverviewWidgetSmall extends AppWidgetProvider {
+    private static final String TAG = "WeatherOverviewWidgetSmall";
 
-    public static final String ACTION_SWITCH_VIEW = "com.skyweather.app.ACTION_SWITCH_OVERVIEW_VIEW";
+    public static final String ACTION_SWITCH_VIEW = "com.skyweather.app.ACTION_SWITCH_SMALL_VIEW";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
             updateWidget(context, appWidgetManager, appWidgetId);
         }
-        WidgetUpdateScheduler.schedule(context);
     }
 
     @Override
     public void onEnabled(Context context) {
         super.onEnabled(context);
-        WidgetUpdateScheduler.schedule(context);
     }
 
     @Override
     public void onDisabled(Context context) {
         super.onDisabled(context);
-        WidgetUpdateScheduler.cancel(context);
     }
 
     @Override
@@ -58,30 +55,29 @@ public class WeatherOverviewWidget extends AppWidgetProvider {
             int widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
             int direction = intent.getIntExtra("direction", 1);
             if (widgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-                int currentPage = WidgetPrefs.getWidgetPage(context, widgetId, 0);
+                int currentPage = WidgetPrefs.getWidgetPageSmall(context, widgetId, 0);
                 int newPage = (currentPage + direction + 2) % 2;
-                WidgetPrefs.setWidgetPage(context, widgetId, newPage);
+                WidgetPrefs.setWidgetPageSmall(context, widgetId, newPage);
                 updateWidget(context, AppWidgetManager.getInstance(context), widgetId);
             }
         }
     }
 
     public static void updateWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_weather_overview);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_weather_overview_small);
         boolean isDarkMode = isDarkMode(context);
 
         // Click anywhere on the widget to flip to the next card
-        Intent flipIntent = new Intent(context, WeatherOverviewWidget.class);
+        Intent flipIntent = new Intent(context, WeatherOverviewWidgetSmall.class);
         flipIntent.setAction(ACTION_SWITCH_VIEW);
         flipIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         flipIntent.putExtra("direction", 1);
         PendingIntent flipPending = PendingIntent.getBroadcast(
-                context, appWidgetId * 100, flipIntent,
+                context, appWidgetId * 200, flipIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.widget_root, flipPending);
 
-        // Restore saved page
-        int currentPage = WidgetPrefs.getWidgetPage(context, appWidgetId, 0);
+        int currentPage = WidgetPrefs.getWidgetPageSmall(context, appWidgetId, 0);
         views.setInt(R.id.view_flipper, "setDisplayedChild", currentPage);
 
         String cachedJson = WidgetPrefs.getCachedWidgetData(context);
@@ -94,37 +90,35 @@ public class WeatherOverviewWidget extends AppWidgetProvider {
                     String tempStr = Math.round(model.current.temperature) + "°";
                     String weatherDesc = getWeatherLabel(model.current.weatherCode);
 
-                    // Temperature card
                     views.setTextViewText(R.id.text_temperature, tempStr);
                     views.setTextViewText(R.id.text_weather_desc, weatherDesc);
                     views.setTextViewText(R.id.text_city, displayCity);
 
-                    // Precipitation card (same context info)
                     views.setTextViewText(R.id.text_temperature_precip, tempStr);
                     views.setTextViewText(R.id.text_weather_desc_precip, weatherDesc);
                     views.setTextViewText(R.id.text_city_precip, displayCity);
 
-                    // Temperature chart (5 hours)
-                    List<WidgetDataModel.HourlyItem> next5Hours = getNextHours(model, 5);
+                    // Temperature chart (3 hours for small widget)
+                    List<WidgetDataModel.HourlyItem> next3Hours = getNextHours(model, 3);
                     List<Double> temps = new ArrayList<>();
                     List<String> times = new ArrayList<>();
-                    for (WidgetDataModel.HourlyItem item : next5Hours) {
+                    for (WidgetDataModel.HourlyItem item : next3Hours) {
                         temps.add(item.temperature);
                         times.add(item.time);
                     }
 
-                    int chartWidth = 480;
-                    int chartHeight = 220;
+                    int chartWidth = 220;
+                    int chartHeight = 130;
                     views.setImageViewBitmap(R.id.image_chart_temp,
                             ChartRenderer.drawTemperatureLineChart(temps, times, chartWidth, chartHeight,
                                     model.current.weatherCode, isDarkMode));
 
-                    // Precipitation chart (2 hours)
-                    List<WidgetDataModel.HourlyItem> next2Hours = getNextHours(model, 2);
+                    // Precipitation chart (1 hour for small widget)
+                    List<WidgetDataModel.HourlyItem> next1Hour = getNextHours(model, 1);
                     List<Double> precips = new ArrayList<>();
                     List<Double> probs = new ArrayList<>();
                     List<String> pTimes = new ArrayList<>();
-                    for (WidgetDataModel.HourlyItem item : next2Hours) {
+                    for (WidgetDataModel.HourlyItem item : next1Hour) {
                         precips.add(item.precipitation);
                         probs.add(item.precipitationProbability);
                         pTimes.add(item.time);
@@ -135,7 +129,7 @@ public class WeatherOverviewWidget extends AppWidgetProvider {
                                     isDarkMode));
                 }
             } catch (Exception e) {
-                Log.e(TAG, "Error updating widget", e);
+                Log.e(TAG, "Error updating small widget", e);
             }
         }
 
@@ -208,7 +202,7 @@ public class WeatherOverviewWidget extends AppWidgetProvider {
             model.fetchTimestamp = obj.optLong("fetchTimestamp", 0);
             return model;
         } catch (Exception e) {
-            Log.e("WeatherOverviewWidget", "parseCachedData error", e);
+            Log.e("WeatherOverviewWidgetSmall", "parseCachedData error", e);
             return null;
         }
     }
@@ -256,7 +250,7 @@ public class WeatherOverviewWidget extends AppWidgetProvider {
 
     public static void updateAll(Context context) {
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
-        int[] ids = manager.getAppWidgetIds(new ComponentName(context, WeatherOverviewWidget.class));
+        int[] ids = manager.getAppWidgetIds(new ComponentName(context, WeatherOverviewWidgetSmall.class));
         for (int id : ids) {
             updateWidget(context, manager, id);
         }

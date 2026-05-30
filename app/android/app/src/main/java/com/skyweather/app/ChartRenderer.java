@@ -1,5 +1,6 @@
 package com.skyweather.app;
 
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,12 +14,18 @@ import java.util.List;
 
 public class ChartRenderer {
 
+    public static boolean isDarkMode(android.content.Context context) {
+        int nightModeFlags = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        return nightModeFlags == Configuration.UI_MODE_NIGHT_YES;
+    }
+
     public static Bitmap drawTemperatureLineChart(
             List<Double> temperatures,
             List<String> times,
             int width,
             int height,
-            int weatherCode) {
+            int weatherCode,
+            boolean isDarkMode) {
         if (temperatures == null || temperatures.isEmpty() || width <= 0 || height <= 0) {
             return Bitmap.createBitmap(Math.max(1, width), Math.max(1, height), Bitmap.Config.ARGB_8888);
         }
@@ -26,10 +33,13 @@ public class ChartRenderer {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
 
-        float chartLeft = 0;
-        float chartTop = 28f;
-        float chartRight = width - 8f;
-        float chartBottom = height - 24f;
+        int textPrimary = isDarkMode ? Color.parseColor("#FFFFFF") : Color.parseColor("#1C1C1E");
+        int textSecondary = isDarkMode ? Color.parseColor("#A1A1A6") : Color.parseColor("#636366");
+
+        float chartLeft = 4f;
+        float chartTop = 22f;
+        float chartRight = width - 4f;
+        float chartBottom = height - 20f;
         float chartWidth = chartRight - chartLeft;
         float chartHeight = chartBottom - chartTop;
 
@@ -46,13 +56,13 @@ public class ChartRenderer {
             tempRange = maxTemp - minTemp;
         }
 
-        int lineColor = getChartColor(weatherCode);
-        int lineColorAlpha = Color.argb(180, Color.red(lineColor), Color.green(lineColor), Color.blue(lineColor));
+        int lineColor = getChartColor(weatherCode, isDarkMode);
+        int lineColorAlpha = Color.argb(140, Color.red(lineColor), Color.green(lineColor), Color.blue(lineColor));
 
         Paint linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         linePaint.setColor(lineColor);
         linePaint.setStyle(Paint.Style.STROKE);
-        linePaint.setStrokeWidth(3f);
+        linePaint.setStrokeWidth(2.8f);
         linePaint.setStrokeCap(Paint.Cap.ROUND);
         linePaint.setStrokeJoin(Paint.Join.ROUND);
 
@@ -63,14 +73,19 @@ public class ChartRenderer {
         dotPaint.setColor(lineColor);
         dotPaint.setStyle(Paint.Style.FILL);
 
+        Paint dotStrokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        dotStrokePaint.setColor(isDarkMode ? Color.parseColor("#1C1C1E") : Color.WHITE);
+        dotStrokePaint.setStyle(Paint.Style.STROKE);
+        dotStrokePaint.setStrokeWidth(2f);
+
         Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setColor(Color.argb(180, 255, 255, 255));
-        textPaint.setTextSize(18f);
+        textPaint.setColor(textSecondary);
+        textPaint.setTextSize(16f);
         textPaint.setTextAlign(Paint.Align.CENTER);
 
         Paint tempTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        tempTextPaint.setColor(Color.WHITE);
-        tempTextPaint.setTextSize(20f);
+        tempTextPaint.setColor(textPrimary);
+        tempTextPaint.setTextSize(18f);
         tempTextPaint.setTextAlign(Paint.Align.CENTER);
 
         int n = temperatures.size();
@@ -82,6 +97,7 @@ public class ChartRenderer {
             pointsY[i] = (float) (chartBottom - chartHeight * ((temperatures.get(i) - minTemp) / tempRange));
         }
 
+        // Smooth cubic bezier curve
         Path linePath = new Path();
         linePath.moveTo(pointsX[0], pointsY[0]);
         for (int i = 0; i < n - 1; i++) {
@@ -94,32 +110,36 @@ public class ChartRenderer {
 
         canvas.drawPath(linePath, linePaint);
 
+        // Gradient fill under curve
         Path fillPath = new Path(linePath);
         fillPath.lineTo(pointsX[n - 1], chartBottom);
         fillPath.lineTo(pointsX[0], chartBottom);
         fillPath.close();
 
+        int fillStartColor = Color.argb(100, Color.red(lineColor), Color.green(lineColor), Color.blue(lineColor));
+        int fillEndColor = Color.argb(5, Color.red(lineColor), Color.green(lineColor), Color.blue(lineColor));
         LinearGradient gradient = new LinearGradient(0, chartTop, 0, chartBottom,
-                lineColorAlpha, Color.argb(0, Color.red(lineColor), Color.green(lineColor), Color.blue(lineColor)),
-                Shader.TileMode.CLAMP);
+                fillStartColor, fillEndColor, Shader.TileMode.CLAMP);
         fillPaint.setShader(gradient);
         canvas.drawPath(fillPath, fillPaint);
 
+        // Dots and temp labels
         for (int i = 0; i < n; i++) {
+            canvas.drawCircle(pointsX[i], pointsY[i], 5.5f, dotStrokePaint);
             canvas.drawCircle(pointsX[i], pointsY[i], 4f, dotPaint);
             String tempStr = Math.round(temperatures.get(i)) + "°";
-            tempTextPaint.setColor(Color.WHITE);
             float tempTextY = pointsY[i] - 14f;
-            if (tempTextY < 18f) {
-                tempTextY = pointsY[i] + 24f;
+            if (tempTextY < 16f) {
+                tempTextY = pointsY[i] + 26f;
             }
             canvas.drawText(tempStr, pointsX[i], tempTextY, tempTextPaint);
         }
 
+        // Time labels
         if (times != null) {
             for (int i = 0; i < n; i++) {
                 String timeLabel = formatTimeLabel(times.get(i));
-                canvas.drawText(timeLabel, pointsX[i], chartBottom + 20f, textPaint);
+                canvas.drawText(timeLabel, pointsX[i], chartBottom + 18f, textPaint);
             }
         }
 
@@ -131,7 +151,8 @@ public class ChartRenderer {
             List<Double> probabilities,
             List<String> times,
             int width,
-            int height) {
+            int height,
+            boolean isDarkMode) {
         if (precipitations == null || precipitations.isEmpty() || width <= 0 || height <= 0) {
             return Bitmap.createBitmap(Math.max(1, width), Math.max(1, height), Bitmap.Config.ARGB_8888);
         }
@@ -139,10 +160,15 @@ public class ChartRenderer {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
 
-        float chartLeft = 0;
-        float chartTop = 16f;
-        float chartRight = width - 8f;
-        float chartBottom = height - 28f;
+        int textPrimary = isDarkMode ? Color.parseColor("#FFFFFF") : Color.parseColor("#1C1C1E");
+        int textSecondary = isDarkMode ? Color.parseColor("#A1A1A6") : Color.parseColor("#636366");
+        int barColor = isDarkMode ? Color.parseColor("#0A84FF") : Color.parseColor("#007AFF");
+        int barColorLight = isDarkMode ? Color.parseColor("#5AC8FA") : Color.parseColor("#32ADE6");
+
+        float chartLeft = 4f;
+        float chartTop = 18f;
+        float chartRight = width - 4f;
+        float chartBottom = height - 22f;
         float chartWidth = chartRight - chartLeft;
         float chartHeight = chartBottom - chartTop;
 
@@ -153,26 +179,26 @@ public class ChartRenderer {
         if (maxPrecip < 0.1) maxPrecip = 0.1;
 
         int n = precipitations.size();
-        float barWidth = chartWidth / n * 0.6f;
+        float barWidth = chartWidth / n * 0.55f;
         float barSpacing = chartWidth / n;
 
         Paint barPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        barPaint.setColor(Color.argb(180, 100, 180, 255));
+        barPaint.setColor(barColor);
         barPaint.setStyle(Paint.Style.FILL);
 
         Paint barStrokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        barStrokePaint.setColor(Color.argb(220, 130, 200, 255));
+        barStrokePaint.setColor(barColorLight);
         barStrokePaint.setStyle(Paint.Style.STROKE);
         barStrokePaint.setStrokeWidth(1.5f);
 
         Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setColor(Color.argb(180, 255, 255, 255));
-        textPaint.setTextSize(18f);
+        textPaint.setColor(textSecondary);
+        textPaint.setTextSize(15f);
         textPaint.setTextAlign(Paint.Align.CENTER);
 
         Paint valuePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        valuePaint.setColor(Color.WHITE);
-        valuePaint.setTextSize(20f);
+        valuePaint.setColor(textPrimary);
+        valuePaint.setTextSize(17f);
         valuePaint.setTextAlign(Paint.Align.CENTER);
 
         for (int i = 0; i < n; i++) {
@@ -181,9 +207,10 @@ public class ChartRenderer {
             float top = chartBottom - barHeight;
             float right = left + barWidth;
 
+            // Rounded bar
             RectF barRect = new RectF(left, top, right, chartBottom);
-            canvas.drawRoundRect(barRect, 4f, 4f, barPaint);
-            canvas.drawRoundRect(barRect, 4f, 4f, barStrokePaint);
+            canvas.drawRoundRect(barRect, 6f, 6f, barPaint);
+            canvas.drawRoundRect(barRect, 6f, 6f, barStrokePaint);
 
             if (precipitations.get(i) > 0) {
                 String valStr = String.format("%.1f", precipitations.get(i));
@@ -192,20 +219,21 @@ public class ChartRenderer {
 
             if (times != null && i < times.size()) {
                 String timeLabel = formatTimeLabel(times.get(i));
-                canvas.drawText(timeLabel, left + barWidth / 2f, chartBottom + 20f, textPaint);
+                canvas.drawText(timeLabel, left + barWidth / 2f, chartBottom + 18f, textPaint);
             }
         }
 
+        // Probability label at top
         if (probabilities != null && !probabilities.isEmpty()) {
             double maxProb = 0;
             for (double p : probabilities) {
                 if (p > maxProb) maxProb = p;
             }
             Paint probPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            probPaint.setColor(Color.argb(200, 130, 200, 255));
-            probPaint.setTextSize(18f);
+            probPaint.setColor(barColorLight);
+            probPaint.setTextSize(15f);
             probPaint.setTextAlign(Paint.Align.LEFT);
-            canvas.drawText("降水概率 " + Math.round(maxProb) + "%", chartLeft + 4f, chartTop + 2f, probPaint);
+            canvas.drawText("降水概率 " + Math.round(maxProb) + "%", chartLeft + 2f, chartTop + 2f, probPaint);
         }
 
         return bitmap;
@@ -343,16 +371,26 @@ public class ChartRenderer {
         return bitmap;
     }
 
-    private static int getChartColor(int weatherCode) {
-        if (weatherCode == 0 || weatherCode == 1) return Color.parseColor("#FFD700");
-        if (weatherCode == 2 || weatherCode == 3) return Color.parseColor("#A0AEC0");
-        if (weatherCode >= 51 && weatherCode <= 67) return Color.parseColor("#4A90E2");
-        if (weatherCode >= 71 && weatherCode <= 77) return Color.parseColor("#B0E0E6");
-        if (weatherCode >= 80 && weatherCode <= 82) return Color.parseColor("#4A90E2");
-        if (weatherCode >= 85 && weatherCode <= 86) return Color.parseColor("#B0E0E6");
-        if (weatherCode >= 95) return Color.parseColor("#7C3AED");
-        if (weatherCode == 45 || weatherCode == 48) return Color.parseColor("#9CA3AF");
-        return Color.parseColor("#FFD700");
+    private static int getChartColor(int weatherCode, boolean isDarkMode) {
+        int color;
+        if (weatherCode == 0 || weatherCode == 1) color = Color.parseColor("#FFB800");
+        else if (weatherCode == 2 || weatherCode == 3) color = Color.parseColor("#8E8E93");
+        else if (weatherCode >= 51 && weatherCode <= 67) color = Color.parseColor("#007AFF");
+        else if (weatherCode >= 71 && weatherCode <= 77) color = Color.parseColor("#5AC8FA");
+        else if (weatherCode >= 80 && weatherCode <= 82) color = Color.parseColor("#007AFF");
+        else if (weatherCode >= 85 && weatherCode <= 86) color = Color.parseColor("#5AC8FA");
+        else if (weatherCode >= 95) color = Color.parseColor("#AF52DE");
+        else if (weatherCode == 45 || weatherCode == 48) color = Color.parseColor("#8E8E93");
+        else color = Color.parseColor("#FFB800");
+
+        if (isDarkMode) {
+            // Slightly brighten colors for dark mode
+            float[] hsv = new float[3];
+            Color.colorToHSV(color, hsv);
+            hsv[2] = Math.min(1.0f, hsv[2] * 1.15f);
+            return Color.HSVToColor(hsv);
+        }
+        return color;
     }
 
     private static int getAqiColor(double aqi) {

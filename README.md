@@ -133,6 +133,7 @@ This project is configured with GitHub Actions. A Debug APK is automatically bui
 
 | 版本 | 说明 | 下载 |
 |------|------|------|
+| v0.2.2 | 新增小尺寸小组件、深色模式适配、动画优化 | [Releases](../../releases) |
 | v0.2.1 | 更新小组件展示效果 | [Releases](../../releases) |
 | v0.2.0 | Android 桌面小组件 | [Releases](../../releases) |
 | v0.1.0 | 首个预览版本 | [Releases](../../releases) |

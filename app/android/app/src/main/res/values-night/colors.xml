@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#4A90E2</color>
+    <color name="colorPrimaryDark">#357ABD</color>
+    <color name="colorAccent">#4A90E2</color>
+
+    <!-- Widget dark mode colors -->
+    <color name="widget_background">#1C1C1E</color>
+    <color name="widget_surface">#2C2C2E</color>
+    <color name="widget_text_primary">#FFFFFF</color>
+    <color name="widget_text_secondary">#A1A1A6</color>
+    <color name="widget_text_tertiary">#8E8E93</color>
+    <color name="widget_accent_blue">#0A84FF</color>
+    <color name="widget_accent_cyan">#64D2FF</color>
+    <color name="widget_divider">#38383A</color>
+    <color name="widget_dot_active">#0A84FF</color>
+    <color name="widget_dot_inactive">#48484A</color>
+    <color name="widget_shadow">#40000000</color>
+</resources>
